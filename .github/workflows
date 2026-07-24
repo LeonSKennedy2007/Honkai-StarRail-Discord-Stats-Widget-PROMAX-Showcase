@@ -1,0 +1,58 @@
+name: Update HSR Widget
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      HAS_HOYO: ${{ secrets.HOYO_LTUID_V2 != '' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        if: env.HAS_HOYO == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch HoyoLab battle stats (optional)
+        if: env.HAS_HOYO == 'true'
+        env:
+          HSR_UID: ${{ secrets.HSR_UID }}
+          HOYO_LTUID_V2: ${{ secrets.HOYO_LTUID_V2 }}
+          HOYO_STOKEN: ${{ secrets.HOYO_STOKEN }}
+          HOYO_MID: ${{ secrets.HOYO_MID }}
+          HOYO_LTOKEN_V2: ${{ secrets.HOYO_LTOKEN_V2 }}
+        run: |
+          pip install -r optional-hoyolab/requirements.txt
+          python optional-hoyolab/hsr_hoyolab.py
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Run HSR widget updater
+        env:
+          HSR_UID: ${{ secrets.HSR_UID }}
+          DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+          DISCORD_USER_ID: ${{ secrets.DISCORD_USER_ID }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_CLIENT_ID_2: ${{ secrets.DISCORD_CLIENT_ID_2 }}
+          DISCORD_BOT_TOKEN_2: ${{ secrets.DISCORD_BOT_TOKEN_2 }}
+          ROTATE_HOURS: 6
+          ACH_TOTAL: 1748
+        run: node hsrUser.js
