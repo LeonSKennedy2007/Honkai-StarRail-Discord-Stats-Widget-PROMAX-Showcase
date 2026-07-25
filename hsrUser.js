@@ -174,8 +174,8 @@ async function syncHsrStats() {
             { type: 1, name: "su_str", value: "Simulated Universe" },
             { type: 1, name: "su", value: su },
 
-            { type: 2, name: "chars_count", value: Number(rec.avatarCount ?? 0) },
-            { type: 2, name: "cones_count", value: Number(rec.equipmentCount ?? 0) },
+            { type: 1, name: "chars_count", value: String(rec.avatarCount ?? 0) },
+            { type: 1, name: "cones_count", value: String(rec.equipmentCount ?? 0) },
         ];
 
         for (const bar of PROGRESS_BARS) {
