@@ -235,6 +235,9 @@ async function syncHsrStats() {
                 dynamic.push({ type: 1, name: "days_str", value: "Active Days" });
                 dynamic.push({ type: 1, name: "days_txt", value: String(hoyo.active_days) });
             }
+            if (hoyo.stamina) {
+                dynamic.push({ type: 1, name: "stamina", value: hoyo.stamina });
+            }
         }
 
         if (imageUrl) {
