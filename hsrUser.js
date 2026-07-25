@@ -176,8 +176,6 @@ async function syncHsrStats() {
 
         { type: 1, name: "chars_str", value: "Characters Obtained" },
         { type: 2, name: "chars_count", value: Number(rec.avatarCount ?? 0) },
-        { type: 1, name: "cones_str", value: "Light Cones" },
-        { type: 2, name: "cones_count", value: Number(rec.equipmentCount ?? 0) },
     ];
 
         for (const bar of PROGRESS_BARS) {
