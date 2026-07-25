@@ -168,6 +168,12 @@ async def main() -> None:
     except Exception as e:
         print("Stats fetch failed:", e)
 
+    try:
+        notes = await client.get_starrail_notes(uid)
+        out["stamina"] = f"{notes.current_stamina}/{notes.max_stamina}"
+    except Exception as e:
+        print("Stamina fetch failed:", e)
+
     target = Path(__file__).resolve().parent.parent / "hoyo_stats.json"
     target.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
     print("Wrote", target, "->", out)
