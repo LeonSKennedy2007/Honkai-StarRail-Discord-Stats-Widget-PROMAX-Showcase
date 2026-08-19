@@ -175,7 +175,6 @@ async function syncHsrStats() {
             { type: 1, name: "su", value: su },
 
             { type: 1, name: "chars_count", value: String(rec.avatarCount ?? 0) },
-            { type: 1, name: "cones_count", value: String(rec.equipmentCount ?? 0) },
         ];
 
         for (const bar of PROGRESS_BARS) {
