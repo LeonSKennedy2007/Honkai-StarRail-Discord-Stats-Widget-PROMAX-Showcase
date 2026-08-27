@@ -39,6 +39,10 @@ const PROGRESS_BARS = [
 
 const UA = { "User-Agent": "HSR-Stats-Widget/1.0 (+github-actions)" };
 
+// เพิ่มจาก 10 วิ เป็น 25 วิ เผื่อเวลาให้ Enka/StarRailRes ตอบช้าได้มากขึ้น
+// (มักเกิดช่วงเกมออกแพตช์ใหม่ คนแห่ไป sync ข้อมูลพร้อมกันทำให้ server ตอบช้า)
+const TIMEOUT_MS = 25000;
+
 const regionMap = {
     ASIA: "Asia",
     EUR: "Europe",
@@ -52,7 +56,7 @@ const regionMap = {
 let _charsIndex = null;
 async function getCharsIndex() {
     if (_charsIndex) return _charsIndex;
-    const { data } = await axios.get(SRRES_CHARS_URL, { timeout: 10000, headers: UA });
+    const { data } = await axios.get(SRRES_CHARS_URL, { timeout: TIMEOUT_MS, headers: UA });
     _charsIndex = data ?? {};
     return _charsIndex;
 }
@@ -96,7 +100,7 @@ async function getShowcasedCharacter(detail) {
 
         const pfpId = detail.headIcon;
         if (pfpId) {
-            const { data: pfps } = await axios.get(ENKA_PFPS_URL, { timeout: 10000, headers: UA });
+            const { data: pfps } = await axios.get(ENKA_PFPS_URL, { timeout: TIMEOUT_MS, headers: UA });
             const iconPath = pfps[String(pfpId)]?.Icon;
             if (iconPath) {
                 return { imageUrl: `${ENKA_UI_BASE}${iconPath}`, name: null, level: null, eidolon: 0 };
@@ -139,7 +143,7 @@ function readHoyoStats() {
 
 async function syncHsrStats() {
     try {
-        const res = await axios.get(ENKA_HSR_URL, { timeout: 10000, headers: UA });
+        const res = await axios.get(ENKA_HSR_URL, { timeout: TIMEOUT_MS, headers: UA });
         const detail = res.data.detailInfo;
         if (!detail) throw new Error("Player profile is private or not found.");
 
